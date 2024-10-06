@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Setter</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #3F3D56;
+            --accent-color: #F50057;
+            --background-color: #F4F7FE;
+            --text-color: #2C3E50;
+            --success-color: #00C853;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(135deg, #ffffff 0%, #f6f7ff 100%);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, rgba(108, 99, 255, 0) 70%);
+            z-index: -1;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.6s, opacity 0.6s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(108, 99, 255, 0.3);
+        }
+
+        button:hover::after {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        #progressBar {
+            background-color: rgba(236, 240, 241, 0.6);
+            border-radius: 15px;
+            padding: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #progressFill {
+            height: 20px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border-radius: 11px;
+            width: 0;
+            transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+            position: relative;
+        }
+
+        #progressFill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        #progressLabel {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        #totalSaved {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            text-shadow: 0 2px 4px rgba(0, 200, 83, 0.2);
+        }
+
+        #amountInputs {
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            input,
+            button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Goal Setter</h1>
+        <input type="text" id="goalInput" placeholder="Enter your goal">
+        <input type="number" id="targetAmount" placeholder="Target amount">
+        <input type="number" id="currentAmount" placeholder="Current amount">
+        <button onclick="addAmount()">Add Amount</button>
+        <div id="amountInputs"></div>
+        <button onclick="calculateTotal()">Calculate Total</button>
+        <div class="info">
+            <p>Total saved: ₹<span id="totalSaved">0</span></p>
+        </div>
+        <div id="progressBar">
+            <div id="progressFill"></div>
+        </div>
+        <p id="progressLabel">Progress: 0%</p>
+    </div>
+
+    <script>
+        // JavaScript remains the same as in the previous version
+        let amounts = [];
+
+        function loadData() {
+            const savedData = localStorage.getItem('goalSetterData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById('goalInput').value = data.goal;
+                document.getElementById('targetAmount').value = data.target;
+                document.getElementById('currentAmount').value = data.current;
+                amounts = data.amounts;
+                renderAmountInputs();
+                calculateTotal();
+            }
+        }
+
+        function saveData() {
+            const data = {
+                goal: document.getElementById('goalInput').value,
+                target: document.getElementById('targetAmount').value,
+                current: document.getElementById('currentAmount').value,
+                amounts: amounts
+            };
+            localStorage.setItem('goalSetterData', JSON.stringify(data));
+        }
+
+        function addAmount() {
+            amounts.push(0);
+            renderAmountInputs();
+            saveData();
+        }
+
+        function renderAmountInputs() {
+            const container = document.getElementById('amountInputs');
+            container.innerHTML = '';
+            amounts.forEach((amount, index) => {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.value = amount;
+                input.placeholder = `Amount ${index + 1}`;
+                input.oninput = (e) => {
+                    amounts[index] = parseFloat(e.target.value) || 0;
+                    saveData();
+                };
+                container.appendChild(input);
+            });
+        }
+
+        function calculateTotal() {
+            const currentAmount = parseFloat(document.getElementById('currentAmount').value) || 0;
+            const total = amounts.reduce((sum, amount) => sum + amount, currentAmount);
+            document.getElementById('totalSaved').textContent = total.toFixed(2);
+            updateProgress(total);
+            saveData();
+        }
+
+        function updateProgress(total) {
+            const target = parseFloat(document.getElementById('targetAmount').value) || 0;
+            const percentage = (total / target) * 100;
+            document.getElementById('progressFill').style.width = `${Math.min(percentage, 100)}%`;
+            document.getElementById('progressLabel').textContent = `Progress: ${percentage.toFixed(2)}%`;
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+
+</html>
